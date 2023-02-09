@@ -13,6 +13,15 @@ const playerPosition = {
   y: undefined,
 };
 
+const giftPosition = {
+  x: undefined,
+  y: undefined,
+};
+
+const enemiesPositions = [];
+
+let enemiesCaptured = false;
+
 window.addEventListener("load", setCanvasSize);
 
 window.addEventListener("resize", setCanvasSize);
@@ -40,11 +49,21 @@ function startGame() {
       ) {
         playerPosition.x = posX;
         playerPosition.y = posY;
+      } else if (col == "I") {
+        giftPosition.x = posX;
+        giftPosition.y = posY;
+      } else if (col == "X" && !enemiesCaptured) {
+        enemiesPositions.push({
+          x: posX,
+          y: posY,
+        });
       }
 
       game.fillText(emoji, posX, posY);
     });
   });
+
+  enemiesCaptured = true;
 
   movePlayer();
 }
@@ -71,12 +90,32 @@ btnDown.addEventListener("click", moveDown);
 btnRight.addEventListener("click", moveRight);
 
 function movePlayer() {
+  const giftCollision = {
+    colissionOnX: playerPosition.x.toFixed(3) == giftPosition.x.toFixed(3),
+    colissionOnY: playerPosition.y.toFixed(3) == giftPosition.y.toFixed(3),
+  };
+
+  if (giftCollision.colissionOnX && giftCollision.colissionOnY) {
+    console.log("Next level");
+  }
+
+  const enemyCollision = enemiesPositions.find((enemy) => {
+    if (
+      enemy.x.toFixed(3) == playerPosition.x.toFixed(3) &&
+      enemy.y.toFixed(3) == playerPosition.y.toFixed(3)
+    ) {
+      return true;
+    }
+  });
+
+  if (enemyCollision) {
+    console.log("Chocaste");
+  }
+
   game.fillText(emojis["PLAYER"], playerPosition.x, playerPosition.y);
 }
 
 function moveUp() {
-  console.log("Up");
-
   if (playerPosition.y - elementSize < elementSize) {
   } else {
     playerPosition.y -= elementSize;
@@ -85,8 +124,6 @@ function moveUp() {
 }
 
 function moveLeft() {
-  console.log("Left");
-
   if (playerPosition.x - elementSize < elementSize) {
   } else {
     playerPosition.x -= elementSize;
@@ -95,8 +132,6 @@ function moveLeft() {
 }
 
 function moveDown() {
-  console.log("Down");
-
   if (playerPosition.y + elementSize > canvasSize) {
   } else {
     playerPosition.y += elementSize;
@@ -105,8 +140,6 @@ function moveDown() {
 }
 
 function moveRight() {
-  console.log("Right");
-
   if (playerPosition.x + elementSize > canvasSize) {
   } else {
     playerPosition.x += elementSize;
