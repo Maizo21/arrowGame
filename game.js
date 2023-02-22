@@ -7,6 +7,7 @@ const btnRight = document.querySelector("#right");
 
 let canvasSize;
 let elementSize;
+let level = 0;
 
 const playerPosition = {
   x: undefined,
@@ -31,7 +32,13 @@ function startGame() {
   game.fillStyle = "blue";
   game.textAlign = "end";
 
-  const map = maps[0];
+  const map = maps[level];
+
+  if (!map) {
+    gameWin();
+    return;
+  }
+
   const mapRows = map.trim().split("\n");
   const mapRowsCols = mapRows.map((row) => row.trim().split(""));
 
@@ -89,6 +96,16 @@ btnLeft.addEventListener("click", moveLeft);
 btnDown.addEventListener("click", moveDown);
 btnRight.addEventListener("click", moveRight);
 
+function levelWin() {
+  console.log("subiste de nivel");
+  level++;
+  startGame();
+}
+
+function gameWin() {
+  console.log("terminaste el juego");
+}
+
 function movePlayer() {
   const giftCollision = {
     colissionOnX: playerPosition.x.toFixed(3) == giftPosition.x.toFixed(3),
@@ -96,7 +113,7 @@ function movePlayer() {
   };
 
   if (giftCollision.colissionOnX && giftCollision.colissionOnY) {
-    console.log("Next level");
+    levelWin();
   }
 
   const enemyCollision = enemiesPositions.find((enemy) => {
