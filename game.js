@@ -8,6 +8,7 @@ const btnRight = document.querySelector("#right");
 let canvasSize;
 let elementSize;
 let level = 0;
+let lives = 3;
 
 const playerPosition = {
   x: undefined,
@@ -19,9 +20,7 @@ const giftPosition = {
   y: undefined,
 };
 
-const enemiesPositions = [];
-
-let enemiesCaptured = false;
+let enemiesPositions = [];
 
 window.addEventListener("load", setCanvasSize);
 
@@ -42,6 +41,7 @@ function startGame() {
   const mapRows = map.trim().split("\n");
   const mapRowsCols = mapRows.map((row) => row.trim().split(""));
 
+  enemiesPositions = [];
   game.clearRect(0, 0, canvasSize, canvasSize);
 
   mapRowsCols.forEach((row, rowIndex) => {
@@ -59,7 +59,7 @@ function startGame() {
       } else if (col == "I") {
         giftPosition.x = posX;
         giftPosition.y = posY;
-      } else if (col == "X" && !enemiesCaptured) {
+      } else if (col == "X") {
         enemiesPositions.push({
           x: posX,
           y: posY,
@@ -69,8 +69,6 @@ function startGame() {
       game.fillText(emoji, posX, posY);
     });
   });
-
-  enemiesCaptured = true;
 
   movePlayer();
 }
@@ -106,6 +104,19 @@ function gameWin() {
   console.log("terminaste el juego");
 }
 
+function levelFail() {
+  lives--;
+
+  if (lives <= 0) {
+    level = 0;
+    lives = 3;
+  }
+
+  playerPosition.x = undefined;
+  playerPosition.y = undefined;
+  startGame();
+}
+
 function movePlayer() {
   const giftCollision = {
     colissionOnX: playerPosition.x.toFixed(3) == giftPosition.x.toFixed(3),
@@ -126,7 +137,7 @@ function movePlayer() {
   });
 
   if (enemyCollision) {
-    console.log("Chocaste");
+    levelFail();
   }
 
   game.fillText(emojis["PLAYER"], playerPosition.x, playerPosition.y);
