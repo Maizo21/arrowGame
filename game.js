@@ -126,13 +126,14 @@ function gameWin() {
   if (recordTime) {
     if (recordTime >= playerTime) {
       localStorage.setItem("record_time", playerTime);
-      pResult.innerHTML = "superaste el record 🏆🥇"
+      pResult.innerHTML = "superaste el record 🏆🥇";
     } else {
       pResult.innerHTML = "No superaste el record 🙁. Intentalo de nuevo";
     }
   } else {
     localStorage.setItem("record_time", playerTime);
-    pResult.innerHTML = "¿Primera vez? Veamos si puedes superar tu propio record 😎";
+    pResult.innerHTML =
+      "¿Primera vez? Veamos si puedes superar tu propio record 😎";
   }
   console.log({ recordTime, playerTime });
 }
