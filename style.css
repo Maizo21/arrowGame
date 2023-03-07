@@ -58,6 +58,15 @@ p {
   width: 100%;
 }
 
+.button-container {
+  width: 100%;
+  text-align: center;
+}
+
+.button-container button {
+  width: auto;
+}
+
 @media (max-width: 440px) {
   button {
     margin-top: 25px;

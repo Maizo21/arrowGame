@@ -6,6 +6,8 @@ const btnDown = document.querySelector("#down");
 const btnRight = document.querySelector("#right");
 const spanLives = document.querySelector("#lives");
 const spanTime = document.querySelector("#time");
+const spanRecord = document.querySelector("#record");
+const pResult = document.querySelector("#result");
 
 let canvasSize;
 let elementSize;
@@ -47,6 +49,7 @@ function startGame() {
   if (!timeStart) {
     timeStart = Date.now();
     timeInterval = setInterval(showTime, 100);
+    showRecord();
   }
 
   const mapRows = map.trim().split("\n");
@@ -116,6 +119,22 @@ function levelWin() {
 function gameWin() {
   console.log("terminaste el juego");
   clearInterval(timeInterval);
+
+  const recordTime = localStorage.getItem("record_time");
+  const playerTime = Date.now() - timeStart;
+
+  if (recordTime) {
+    if (recordTime >= playerTime) {
+      localStorage.setItem("record_time", playerTime);
+      pResult.innerHTML = "superaste el record 🏆🥇"
+    } else {
+      pResult.innerHTML = "No superaste el record 🙁. Intentalo de nuevo";
+    }
+  } else {
+    localStorage.setItem("record_time", playerTime);
+    pResult.innerHTML = "¿Primera vez? Veamos si puedes superar tu propio record 😎";
+  }
+  console.log({ recordTime, playerTime });
 }
 
 function levelFail() {
@@ -139,6 +158,12 @@ function showLives() {
 
 function showTime() {
   spanTime.innerHTML = ((Date.now() - timeStart) / 1000).toFixed(1);
+}
+
+function showRecord() {
+  spanRecord.innerHTML = (localStorage.getItem("record_time") / 1000).toFixed(
+    1
+  );
 }
 
 function movePlayer() {
